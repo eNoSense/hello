@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import AV from  'leancloud-storage';
 
 class Signin extends Component {
   constructor (props) {
     super(props)
     this.state = {
       sign_in_form: {
-        email: '',
+        nickname: '',
         password: '',
       }
     }
@@ -19,10 +22,20 @@ class Signin extends Component {
   }
 
   login() {
-    const { email, password } = this.state.sign_in_form
-    if (!email || !password) {
+    const { nickname, password } = this.state.sign_in_form
+    if (!nickname || !password) {
       alert('表单信息没有填写完整')
     }
+    AV.User.logIn(nickname, password)
+      .then(user => {
+        console.log(user)
+        this.setState({
+          current_user: user,
+        })
+        this.props.history.push('/index')
+      }, error => {
+        alert(JSON.stringify(error))
+      })
   }
 
   render () {
@@ -30,11 +43,11 @@ class Signin extends Component {
       <div className="container">
         <div className="sign_up">
           <h1>用户登录</h1>
-          <p> <input onChange={(e) => { this.onSignInFromValueChange(e, 'email')}} value={this.state.sign_in_form.email} className="middle" type="text" placeholder="Email" /> </p>
+          <p> <input onChange={(e) => { this.onSignInFromValueChange(e, 'nickname')}} value={this.state.sign_in_form.email} className="middle" type="text" placeholder="用户名" /> </p>
           <p> <input onChange={(e) => { this.onSignInFromValueChange(e, 'password')}} value={this.state.sign_in_form.password} className="middle" type="password" placeholder="密码" /> </p>
           <p>
             <input onClick={() => { this.login() }} className="middle-button" type="submit" value="登录"/>
-            {/* <a href="javascript:;" onClick={() => { this.goSignUp() }}>去注册 >> </a> */}
+            <Link to="/signup" >去注册 >> </Link>
           </p>
         </div>
       </div>
@@ -42,4 +55,4 @@ class Signin extends Component {
   }
 }
 
-export default Signin;
+export default withRouter(Signin);

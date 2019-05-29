@@ -72,14 +72,13 @@ a {
   text-decoration: none;
 }
 
-.container a {
+.container a, .container span.aWithoutHref {
   margin-left: 150px;
   color: #ddd;
+  cursor: pointer;
 }
 
-.container a:hover {
+.container a:hover, span.aWithoutHref:hover {
   border-bottom: 1px solid;
   color: rgb(0, 152, 255);
 }
-
-
